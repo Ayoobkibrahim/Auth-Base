@@ -40,5 +40,42 @@ def Loginview(request):
 
     return render(request, 'login.html')
 
+@csrf_protect
+@never_cache
+def signupView(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        confirmPassword = request.POST.get('confirmPassowrd')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Username already taken')
+            return redirect('signup')
+
+        if password != confirmPassword:
+            messages.error(request, 'Password donot match')
+            return redirect('signup')
+
+        if not username or not password or not confirmPassword:
+            messages.error(request, 'All fields are required')
+            return redirect('signup')
+
+        if not username.isalnum():
+            messages.error(request, 'username must be alphanumirc')
+            return redirect('signup')
+
+        if len(password) < 8:
+            messages.error(
+                request, 'Password must be at least 8 characters long')
+            return redirect('signup')
+
+        user = User.objects.create_user(
+            username=username, password=password)
+        user.save()
+
+        messages.success(request, 'Signup succesfull. Please Login')
+        return redirect('login')
+    return render(request, 'signup.html')
+
 
 

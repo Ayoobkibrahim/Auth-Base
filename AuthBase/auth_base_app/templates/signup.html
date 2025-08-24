@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-
 <body>
-    <h1>login Page</h1>
-
+    <h1>Signup Page</h1>
     {% if messages %}
     {% for message in messages %}
     <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
@@ -25,10 +22,10 @@
         <input type="text" name="username" required><br><br>
         <label>Password</label>
         <input type="text" name="password" required>
+        <label>ConfirmPassword</label>
+        <input type="text" name="confirmPassowrd" required>
 
-        <button type="submit">Login</button>
+        <button type="submit">Signup</button>
     </form>
-    <p>if you dont have account <a href="{% url 'signup' %}">Signup</a></p>
 </body>
-
 </html>
