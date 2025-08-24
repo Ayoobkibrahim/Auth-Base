@@ -44,6 +44,8 @@ def Loginview(request):
 @csrf_protect
 @never_cache
 def signupView(request):
+    if request.user.is_authenticated:
+        return redirect('home')
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -72,7 +74,6 @@ def signupView(request):
 
         user = User.objects.create_user(
             username=username, password=password)
-        user.save()
 
         messages.success(request, 'Signup succesfull. Please Login')
         return redirect('login')
