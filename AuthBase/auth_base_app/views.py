@@ -49,7 +49,7 @@ def signupView(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        confirmPassword = request.POST.get('confirmPassowrd')
+        confirmPassword = request.POST.get('confirm_password')
 
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Username already taken')
