@@ -9,11 +9,11 @@ from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
 
 
-
 @csrf_protect
 @never_cache
 def Loginview(request):
-    
+    if request.user.is_authenticated:
+        return redirect('home')
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -28,7 +28,7 @@ def Loginview(request):
             login(request, user)
             request.session['username'] = user.username
             request.session['user_id'] = user.id
-            response = redirect('login')
+            response = redirect('home')
             response.set_cookie('login_status', 'logged_in',
                                 max_age=3600, httponly=True, samesite='Lax')
             messages.success(request, 'login succesfully')
@@ -39,6 +39,7 @@ def Loginview(request):
             return redirect('login')
 
     return render(request, 'login.html')
+
 
 @csrf_protect
 @never_cache
@@ -78,4 +79,17 @@ def signupView(request):
     return render(request, 'signup.html')
 
 
+@login_required(login_url='login')
+@never_cache
+def homeView(request):
+    username = request.session.get('username', 'Guest')
+    return render(request, 'home.html', {'username': username})
 
+
+def logoutView(request):
+    logout(request)
+    request.session.flush()
+    response = redirect('login')
+    response.delete_cookie('login_status')
+    messages.success(request, "You have been logged out successfully.")
+    return response
